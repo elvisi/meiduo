@@ -1478,7 +1478,7 @@ model</ColNames>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="346" parent="281" name="model">
+    <column id="346" parent="281" name="mobile">
       <Position>12</Position>
       <DataType>varchar(11)|0s</DataType>
       <NotNull>1</NotNull>
@@ -1490,7 +1490,7 @@ model</ColNames>
       <Type>btree</Type>
     </index>
     <index id="348" parent="281" name="model">
-      <ColNames>model</ColNames>
+      <ColNames>mobile</ColNames>
       <Unique>1</Unique>
       <Type>btree</Type>
     </index>
@@ -1504,7 +1504,7 @@ model</ColNames>
       <UnderlyingIndexName>username</UnderlyingIndexName>
     </key>
     <key id="351" parent="281" name="model">
-      <ColNames>model</ColNames>
+      <ColNames>mobile</ColNames>
       <UnderlyingIndexName>model</UnderlyingIndexName>
     </key>
     <column id="352" parent="282" name="id">

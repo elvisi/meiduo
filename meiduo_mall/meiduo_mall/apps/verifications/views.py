@@ -10,6 +10,7 @@ from rest_framework.generics import GenericAPIView
 
 from meiduo_mall.libs.yuntongxun.sms import CCP
 from .import serializers
+from celery_tasks.sms.tasks import send_sms_code
 
 
 from meiduo_mall.libs.captcha.captcha import captcha
@@ -52,9 +53,16 @@ class SMSCodeView(GenericAPIView):
         pl.execute()  # 把上面所有的redis操作一并一次性执行
     # 5.发送短信
         sms_code_expires = str(constants.SMS_CODE_REDIS_EXPIRES // 60)
-        ccp = CCP()
-        time = str(constants.SMS_CODE_REDIS_EXPIRES // 60)
-        ccp.send_template_sms(mobile, [sms_code, time], constants.SMS_TEMP_ID)
+        # ccp = CCP()
+        # time = str(constants.SMS_CODE_REDIS_EXPIRES // 60)
+        # ccp.send_template_sms(mobile, [sms_code, time], constants.SMS_TEMP_ID)
+
+    # 调用celery执行异步任务发送短信
+        # delay后面需要添加异步任务函数中的参数，而且要安装顺序一一填写
+        send_sms_code.delay(mobile,sms_code)
+
+
+
     # 6. 返回响应结果
         return Response({'message':'OK'},status.HTTP_200_OK)
 

@@ -16,8 +16,8 @@ class ImageCodeCheckSerializer(serializers.Serializer):
 
     def validate(self, attrs):
         """校验"""
+        image_code = attrs['image_code']
         image_code_id = attrs['image_code_id']
-        text = attrs['text']
         # 从Redis中获取真实图片验证码
         redis_conn = get_redis_connection('verify_codes')
         real_image_code_text = redis_conn.get('img_%s'% image_code_id)
@@ -33,10 +33,10 @@ class ImageCodeCheckSerializer(serializers.Serializer):
 
         # 比较图片验证码
         real_image_code_text = real_image_code_text.decode()
-        if real_image_code_text.lower() != text.lower():
+        if real_image_code_text.lower() != image_code.lower():
             raise serializers.ValidationError('图片验证码错误')
 
-        # 判断是否在60s内
+        # 判断是否在60s内发送过短信
         mobile = self.context['view'].kwargs['mobile']
         send_flag = redis_conn.get('send_flag_%s' % mobile)
         if send_flag:
