@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
-
+import datetime
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # 注册users模块
-    'users.apps.UsersConfig',
+    'meiduo_mall.apps.users',
     'rest_framework',
     'corsheaders',
 ]
@@ -223,8 +223,26 @@ LOGGING = {
 REST_FRAMEWORK = {
     # 修改rest_framework框架中的异常处理机制
     'EXCEPTION_HANDLER': 'meiduo_mall.utils.exceptions.exception_handler',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
 }
+# 设置JWT的有效期
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
+    # 自定义jwt认证成功返回操作函数
+    'JWT_RESPONSE_PAYLOAD_HANDLER': 'users.utils.jwt_response_payload_handler',
+}
+
 
 # 设置Django中使用的用户认证模型，官方要求这里只能有一个点.<应用名.模型类名>
 # 这里的配置，必须在项目第一次迁移之前进行声明
 AUTH_USER_MODEL = 'users.User'
+
+
+# 在配置文件中告知Django使用我们自定义的认证后端
+AUTHENTICATION_BACKENDS = [
+    'users.utils.UsernameMobileAuthBackend',
+]
