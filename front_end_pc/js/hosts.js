@@ -1,0 +1,1 @@
+var host = "http://api.meiduo.com:8000"

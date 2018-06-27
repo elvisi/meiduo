@@ -1,6 +1,7 @@
 var vm = new Vue({
 	el: '#app',
 	data: {
+	    host,
 		error_name: false,
 		error_password: false,
 		error_check_password: false,
@@ -21,6 +22,7 @@ var vm = new Vue({
 		sms_code_tip: "获取短信验证码",
 		error_image_code_message: "请填写图片验证码",
         error_name_message:"请输入5-20个字符的用户",
+		error_less_name_message:'请输入5-20个字符的用户',
         error_phone_message:"您输入的手机号格式不正确",
         error_sms_code_message:"请填写短信验证码",
 	},
@@ -47,7 +49,7 @@ var vm = new Vue({
 			// 生成图片验证码编号
 			this.image_code_id = this.generate_uuid();
 			// 组装图片验证码url地址
-			this.image_code_url = "http://127.0.0.1:8000/image_code/"+ this.image_code_id +"/"
+			this.image_code_url = this.host + "/image_code/"+ this.image_code_id +"/"
 		},
 		// 发送短信验证码
 		send_sms_code: function () {
@@ -67,7 +69,7 @@ var vm = new Vue({
 			}
 
 			// 向后端接口发送请求，让后端发送短信验证码
-			axios.get('http://127.0.0.1:8000/sms_code/' + this.mobile + '/?image_code=' + this.image_code+'&image_code_id='+ this.image_code_id, {
+			axios.get(this.host + '/sms_code/' + this.mobile + '/?image_code=' + this.image_code+'&image_code_id='+ this.image_code_id, {
 					// 向后端声明，请返回json数据
 					responseType: 'json'
 				})
@@ -114,7 +116,7 @@ var vm = new Vue({
 
 			// 检查用户名的唯一性
 			if (this.error_name == false) {
-				axios.get('http://127.0.0.1:8000/usernames/' + this.username + '/count/', {
+				axios.get(this.host + '/usernames/' + this.username + '/count/', {
 						responseType: 'json'
 					})
 					.then(response => {
@@ -158,7 +160,7 @@ var vm = new Vue({
 
 			// 发送请求到后台校验手机号码的唯一性
             if (this.error_phone == false) {
-				axios.get('http://127.0.0.1:8000/mobiles/'+ this.mobile + '/count/', {
+				axios.get(this.host + '/mobiles/'+ this.mobile + '/count/', {
 						responseType: 'json'
 					})
 					.then(response => {
@@ -208,7 +210,7 @@ var vm = new Vue({
 			// 提交用户注册信息
             if(this.error_name == false && this.error_password == false && this.error_check_password == false
 				&& this.error_phone == false && this.error_sms_code == false && this.error_allow == false) {
-				axios.post('http://127.0.0.1:8000/users/', {
+				axios.post(this.host + '/users/', {
 						username: this.username,
 						password: this.password,
 						password2: this.password2,

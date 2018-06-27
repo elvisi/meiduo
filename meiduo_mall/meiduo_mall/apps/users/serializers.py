@@ -1,10 +1,10 @@
-import re
-
-from django_redis import get_redis_connection
 from rest_framework import serializers
-from rest_framework.settings import api_settings
+import re
+from django_redis import get_redis_connection
 
-from meiduo_mall.apps.users.models import User
+from .models import User
+from rest_framework_jwt.settings import api_settings
+from .utils import get_user_by_account
 
 
 class CreateUserSerializer(serializers.ModelSerializer):
@@ -91,3 +91,82 @@ class CreateUserSerializer(serializers.ModelSerializer):
             }
 
         }
+
+class CheckSMSCodeSerializer(serializers.Serializer):
+    """校验短信验证码和账号名的序列化器"""
+    sms_code = serializers.CharField(label='短信验证码', min_length=6, max_length=6)
+    def validate(self, attrs):
+        sms_code = attrs['sms_code']
+        # 根据用户名获取用户模型对象
+        account = self.context['view'].kwargs.get('account')
+        user = get_user_by_account(account)
+        if user is None:
+            raise serializers.ValidationError("不存在的用户名")
+
+        # 校验短信验证码
+        redis_conn = get_redis_connection('verify_codes')
+        real_sms_code = redis_conn.get('sms_%s' % user.mobile)
+        if real_sms_code is None:
+            raise serializers.ValidationError('无效的短信验证码')
+        if sms_code != real_sms_code.decode():
+            raise serializers.ValidationError('短信验证码错误')
+
+        # 把当前对象作为序列化器的属性传递给视图中序列化对象
+        self.user = user
+        return attrs
+
+
+class ResetPasswordSerializer(serializers.ModelSerializer):
+    """重置密码序列化器"""
+
+    # 定义字段
+    password2 = serializers.CharField(label='确认密码', write_only=True)
+    access_token = serializers.CharField(label='重置密码的access_token', write_only=True)
+
+    def validate(self, attrs):
+        """校验数据"""
+        # 判断两次密码
+        access_token = attrs['access_token']
+        if attrs['password'] != attrs['password2']:
+            raise serializers.ValidationError('两次密码输入不一致')
+        # 校验重置密码的access_token是否有效
+        allow = User.check_set_password_token(access_token)
+        if not allow:
+            raise serializers.ValidationError('无效的access——token')
+
+        return attrs
+
+
+    def update(self, instance, validated_data):
+        """
+        更新密码
+        :param instance:  当前pk值对应的user模型对象
+        :param validated_data:  校验完成以后的数据
+        :return: user对象
+        """
+        # 调用Django用户模型类的设置密码的方法
+        instance.set_password(validated_data['password'])
+        instance.save()
+        return instance
+
+
+    # 更新
+    class Meta:
+        model = User
+        fields = ('id', 'password', 'password2', 'access_token')
+        extra_kwargs = {
+            'password':{
+                'write_only':True,
+                'min_length':8,
+                'max_length':20,
+                'error_messages':{
+                    'min_length':'仅允许8-20个字符的密码',
+                    'max_length':'仅允许8-20个字符的密码',
+                }
+
+            }
+        }
+
+
+
+

@@ -32,7 +32,11 @@ SECRET_KEY = '_8n+v0124wyq@c$4*+1(-$m0ese&arw6kqia=qg5k9#o)a6cvf'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "www.meiduo.com",
+    "api.meiduo.com",
+]
 
 # Application definition
 
@@ -44,7 +48,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # 注册users模块
-    'meiduo_mall.apps.users',
+    'users.apps.UsersConfig',
+    # 'meiduo_mall.apps.users',
     'rest_framework',
     'corsheaders',
 ]
@@ -62,9 +67,9 @@ MIDDLEWARE = [
 
 # CORS  设置允许后端访问的前端地址有哪些
 CORS_ORIGIN_WHITELIST = (
-    '127.0.0.1:8080',
-    'localhost:8080',
-    'www.meiduo.site:8080'
+    'www.meiduo.com:8080',
+    'api.meiduo.com:8000',
+
 )
 CORS_ALLOW_CREDENTIALS = True  # 允许携带cookie
 
