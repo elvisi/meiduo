@@ -49,9 +49,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # 注册users模块
     'users.apps.UsersConfig',
-    # 'meiduo_mall.apps.users',
+    # 注册users模块
+    'verifications.apps.VerificationsConfig',
     'rest_framework',
     'corsheaders',
+    # 注册users模块
+    'oauth.apps.OauthConfig',
 ]
 
 MIDDLEWARE = [
@@ -67,6 +70,7 @@ MIDDLEWARE = [
 
 # CORS  设置允许后端访问的前端地址有哪些
 CORS_ORIGIN_WHITELIST = (
+    '127.0.0.1:8080',
     'www.meiduo.com:8080',
     'api.meiduo.com:8000',
 
@@ -167,7 +171,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
@@ -251,3 +255,9 @@ AUTH_USER_MODEL = 'users.User'
 AUTHENTICATION_BACKENDS = [
     'users.utils.UsernameMobileAuthBackend',
 ]
+
+
+# QQ登陆相关配置信息
+QQ_APP_ID       = "101480417"
+QQ_APP_KEY      = "325a06cd42b16e0576f16d8b9d8aeeaa"
+QQ_REDIRECT_URI = "http://www.meiduo.com:8080/oauth_callback.html"

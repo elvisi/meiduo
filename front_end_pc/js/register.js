@@ -22,7 +22,6 @@ var vm = new Vue({
 		sms_code_tip: "获取短信验证码",
 		error_image_code_message: "请填写图片验证码",
         error_name_message:"请输入5-20个字符的用户",
-		error_less_name_message:'请输入5-20个字符的用户',
         error_phone_message:"您输入的手机号格式不正确",
         error_sms_code_message:"请填写短信验证码",
 	},
