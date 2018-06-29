@@ -2,7 +2,8 @@ from django.shortcuts import render
 
 # Create your views here.
 from rest_framework import status, mixins
-from rest_framework.generics import CreateAPIView, GenericAPIView, UpdateAPIView
+from rest_framework.generics import CreateAPIView, GenericAPIView, UpdateAPIView, RetrieveAPIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_jwt.serializers import User
@@ -104,4 +105,35 @@ class PasswordView(UpdateAPIView):
         :return: user
         """
         return self.update(request, pk)
+
+# RetrieveAPIView 继承了 GenericAPIView、RetrieveModelMixin，
+# 所以我们可以利用完成指定序列化，并且获取用户详情信息
+# RetrieveAPIView 默认使用的使用需要地址中附带 pk
+class UserDetailView(RetrieveAPIView):
+    """用户详情"""
+    serializer_class = serializers.UserDetailSerializer
+    # 设置当前视图的登陆权限，只能是登陆后的用户才能访问
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

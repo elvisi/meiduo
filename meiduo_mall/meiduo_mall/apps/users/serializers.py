@@ -170,3 +170,13 @@ class ResetPasswordSerializer(serializers.ModelSerializer):
 
 
 
+
+class UserDetailSerializer(serializers.ModelSerializer):
+    """用户详细信息序列化器"""
+    class Meta:
+        model = User
+        # email_active 记录邮箱的验证状态
+        fields = ('id', 'username', 'mobile', 'email', 'email_active')
+
+
+

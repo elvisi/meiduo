@@ -1537,126 +1537,132 @@ model</ColNames>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="357" parent="282" name="username">
+    <column id="357" parent="282" name="email_active">
+      <Position>13</Position>
+      <DataType>tinyint(1)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <index id="358" parent="282" name="username">
       <ColNames>username</ColNames>
       <Unique>1</Unique>
       <Type>btree</Type>
     </index>
-    <index id="358" parent="282" name="model">
+    <index id="359" parent="282" name="model">
       <ColNames>mobile</ColNames>
       <Unique>1</Unique>
       <Type>btree</Type>
     </index>
-    <key id="359" parent="282" name="PRIMARY">
+    <key id="360" parent="282" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="360" parent="282" name="username">
+    <key id="361" parent="282" name="username">
       <ColNames>username</ColNames>
       <UnderlyingIndexName>username</UnderlyingIndexName>
     </key>
-    <key id="361" parent="282" name="model">
+    <key id="362" parent="282" name="model">
       <ColNames>mobile</ColNames>
       <UnderlyingIndexName>model</UnderlyingIndexName>
     </key>
-    <column id="362" parent="283" name="id">
+    <column id="363" parent="283" name="id">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="363" parent="283" name="user_id">
+    <column id="364" parent="283" name="user_id">
       <Position>2</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="364" parent="283" name="group_id">
+    <column id="365" parent="283" name="group_id">
       <Position>3</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="365" parent="283" name="tb_users_groups_user_id_group_id_5a177a84_uniq">
+    <index id="366" parent="283" name="tb_users_groups_user_id_group_id_5a177a84_uniq">
       <ColNames>user_id
 group_id</ColNames>
       <Unique>1</Unique>
       <Type>btree</Type>
     </index>
-    <index id="366" parent="283" name="tb_users_groups_group_id_04d64563_fk_auth_group_id">
+    <index id="367" parent="283" name="tb_users_groups_group_id_04d64563_fk_auth_group_id">
       <ColNames>group_id</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="367" parent="283" name="PRIMARY">
+    <key id="368" parent="283" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="368" parent="283" name="tb_users_groups_user_id_group_id_5a177a84_uniq">
+    <key id="369" parent="283" name="tb_users_groups_user_id_group_id_5a177a84_uniq">
       <ColNames>user_id
 group_id</ColNames>
       <UnderlyingIndexName>tb_users_groups_user_id_group_id_5a177a84_uniq</UnderlyingIndexName>
     </key>
-    <foreign-key id="369" parent="283" name="tb_users_groups_user_id_5f9e3ed0_fk_tb_users_id">
+    <foreign-key id="370" parent="283" name="tb_users_groups_user_id_5f9e3ed0_fk_tb_users_id">
       <ColNames>user_id</ColNames>
       <RefSchemaName>meiduo_mall</RefSchemaName>
       <RefTableName>tb_users</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="370" parent="283" name="tb_users_groups_group_id_04d64563_fk_auth_group_id">
+    <foreign-key id="371" parent="283" name="tb_users_groups_group_id_04d64563_fk_auth_group_id">
       <ColNames>group_id</ColNames>
       <RefSchemaName>meiduo_mall</RefSchemaName>
       <RefTableName>auth_group</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="371" parent="284" name="id">
+    <column id="372" parent="284" name="id">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="372" parent="284" name="user_id">
+    <column id="373" parent="284" name="user_id">
       <Position>2</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="373" parent="284" name="permission_id">
+    <column id="374" parent="284" name="permission_id">
       <Position>3</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="374" parent="284" name="tb_users_user_permissions_user_id_permission_id_064c2ef6_uniq">
+    <index id="375" parent="284" name="tb_users_user_permissions_user_id_permission_id_064c2ef6_uniq">
       <ColNames>user_id
 permission_id</ColNames>
       <Unique>1</Unique>
       <Type>btree</Type>
     </index>
-    <index id="375" parent="284" name="tb_users_user_permis_permission_id_b9b3ac94_fk_auth_perm">
+    <index id="376" parent="284" name="tb_users_user_permis_permission_id_b9b3ac94_fk_auth_perm">
       <ColNames>permission_id</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="376" parent="284" name="PRIMARY">
+    <key id="377" parent="284" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="377" parent="284" name="tb_users_user_permissions_user_id_permission_id_064c2ef6_uniq">
+    <key id="378" parent="284" name="tb_users_user_permissions_user_id_permission_id_064c2ef6_uniq">
       <ColNames>user_id
 permission_id</ColNames>
       <UnderlyingIndexName>tb_users_user_permissions_user_id_permission_id_064c2ef6_uniq</UnderlyingIndexName>
     </key>
-    <foreign-key id="378" parent="284" name="tb_users_user_permissions_user_id_2726c819_fk_tb_users_id">
+    <foreign-key id="379" parent="284" name="tb_users_user_permissions_user_id_2726c819_fk_tb_users_id">
       <ColNames>user_id</ColNames>
       <RefSchemaName>meiduo_mall</RefSchemaName>
       <RefTableName>tb_users</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="379" parent="284" name="tb_users_user_permis_permission_id_b9b3ac94_fk_auth_perm">
+    <foreign-key id="380" parent="284" name="tb_users_user_permis_permission_id_b9b3ac94_fk_auth_perm">
       <ColNames>permission_id</ColNames>
       <RefSchemaName>meiduo_mall</RefSchemaName>
       <RefTableName>auth_permission</RefTableName>
