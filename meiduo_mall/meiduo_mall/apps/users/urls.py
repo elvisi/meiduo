@@ -13,6 +13,9 @@ urlpatterns = [
     url(r'accounts/(?P<account>\w{5,20})/password/token/$', views.PasswordTokenView.as_view()),
     url(r"users/(?P<pk>\d+)/password/$", views.PasswordView.as_view()),
     url(r"user/$", views.UserDetailView.as_view()),
+    url(r"emails/$", views.EmailView.as_view()),
+    url(r"emails/verification/$", views.VerifyEmailView.as_view()),
+
 
 
 ]

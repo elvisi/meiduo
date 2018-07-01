@@ -86,8 +86,7 @@ var vm = new Vue({
                     location.href = response.data.auth_url;
                 })
                 .catch(error => {
-                    // console.log(error.response.data);
-                    console.log(error);
+                    console.log(error.response.data);
                 })
         },
     }

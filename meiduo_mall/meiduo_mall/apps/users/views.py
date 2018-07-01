@@ -119,11 +119,29 @@ class UserDetailView(RetrieveAPIView):
         return self.request.user
 
 
+class EmailView(UpdateAPIView):
+    """发送激活邮件的视图类"""
+    permission_classes = [IsAuthenticated]
+    serializer_class = serializers.EmailSerializer
+    def get_object(self):
+        return self.request.user
 
 
 
+class VerifyEmailView(APIView):
+    """判断激活邮件的token是否有效"""
+    def get(self, request):
+        # 获取token
+        token = request.query_params.get('token')
+        # 校验token
+        user = User.check_verify_email_token(token)
+        if user is None:
+            return Response({'message':'无效的token'},status=status.HTTP_400_BAD_REQUEST)
+        else:
+            user.email_active = True
+            user.save()
 
-
+            return Response({'message':'OK'})
 
 
 

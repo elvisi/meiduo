@@ -30,8 +30,8 @@ var vm = new Vue({
         is_set_title: [],
         input_title: ''
     },
-    created: function(){
-        axios.get(this.host + '/areas/', {
+    mounted: function(){
+        axios.get(this.host + '/area/', {
                 responseType: 'json'
             })
             .then(response => {
@@ -40,30 +40,31 @@ var vm = new Vue({
             .catch(error => {
                 alert(error.response.data);
             });
-        axios.get(this.host + '/users/'+user_id+'/addresses/', {
-                headers: {
-                    'Authorization': 'JWT ' + this.token
-                },
-                responseType: 'json'
-            })
-            .then(response => {
-                this.addresses = response.data.addresses;
-                this.limit = response.data.limit;
-                this.default_address_id = response.data.default_address_id;
-            })
-            .catch(error => {
-                status = error.response.status;
-                if (status == 401 || status == 403) {
-                    location.href = 'login.html?next=/user_center_site.html';
-                } else {
-                    alert(error.response.data.detail);
-                }
-            })
+
+        // axios.get(this.host + '/users/'+user_id+'/addresses/', {
+        //         headers: {
+        //             'Authorization': 'JWT ' + this.token
+        //         },
+        //         responseType: 'json'
+        //     })
+        //     .then(response => {
+        //         this.addresses = response.data.addresses;
+        //         this.limit = response.data.limit;
+        //         this.default_address_id = response.data.default_address_id;
+        //     })
+        //     .catch(error => {
+        //         status = error.response.status;
+        //         if (status == 401 || status == 403) {
+        //             location.href = 'login.html?next=/user_center_site.html';
+        //         } else {
+        //             alert(error.response.data.detail);
+        //         }
+        //     })
     },
     watch: {
         'form_address.province_id': function(){
             if (this.form_address.province_id) {
-                axios.get(this.host + '/areas/'+ this.form_address.province_id + '/', {
+                axios.get(this.host + '/area/'+ this.form_address.province_id + '/', {
                         responseType: 'json'
                     })
                     .then(response => {
@@ -77,7 +78,7 @@ var vm = new Vue({
         },
         'form_address.city_id': function(){
             if (this.form_address.city_id){
-                axios.get(this.host + '/areas/'+ this.form_address.city_id + '/', {
+                axios.get(this.host + '/area/'+ this.form_address.city_id + '/', {
                         responseType: 'json'
                     })
                     .then(response => {

@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.core.mail import send_mail
 from rest_framework import serializers
 import re
 from django_redis import get_redis_connection
@@ -5,6 +7,7 @@ from django_redis import get_redis_connection
 from .models import User
 from rest_framework_jwt.settings import api_settings
 from .utils import get_user_by_account
+from celery_tasks.email.tasks import send_verify_email
 
 
 class CreateUserSerializer(serializers.ModelSerializer):
@@ -168,15 +171,47 @@ class ResetPasswordSerializer(serializers.ModelSerializer):
         }
 
 
-
-
-
 class UserDetailSerializer(serializers.ModelSerializer):
     """用户详细信息序列化器"""
     class Meta:
         model = User
         # email_active 记录邮箱的验证状态
         fields = ('id', 'username', 'mobile', 'email', 'email_active')
+
+
+class EmailSerializer(serializers.ModelSerializer):
+    def update(self, instance, validated_data):
+        instance.email = validated_data['email']
+        instance.save()
+
+        # 生成附带token的激活链接
+        token = instance.generate_verify_email_token()
+        verify_url = 'http://www.meiduo.com:8080/success_verify_email.html?token=' + token
+
+        # # 发送验证邮件
+        # subject = '美多商城邮箱验证'
+        # to_email = [instance.email]
+        # html_message = '<p>尊敬的用户您好!</p>'' \
+        # ''<p>感谢您使用美多商城</p>'' \
+        # ''<p>您的邮箱为：%s。请点击此链接激活您的邮箱</p>'' \
+        # ''<p><a href="%s">%s</a></p>' % (to_email, verify_url,verify_url)
+        # send_mail(subject,"",settings.EMAIL_HOST_USER,to_email,html_message=html_message)
+
+        # 调用celery通过异步发送激活邮件
+        send_verify_email.delay([instance.email],verify_url)
+
+
+
+        return instance
+
+    class Meta:
+        model = User
+        fields = ('id','email')
+        extra_kwargs = {
+            'email':{
+                'required':True
+            }
+        }
 
 
 
