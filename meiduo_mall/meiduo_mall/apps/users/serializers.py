@@ -4,7 +4,7 @@ from rest_framework import serializers
 import re
 from django_redis import get_redis_connection
 
-from .models import User
+from .models import User, Address
 from rest_framework_jwt.settings import api_settings
 from .utils import get_user_by_account
 from celery_tasks.email.tasks import send_verify_email
@@ -60,8 +60,8 @@ class CreateUserSerializer(serializers.ModelSerializer):
         user.save()
 
         # 1.生成一个token
-        jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER  #载荷的配置
-        jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER   # 生成token的配置
+        jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER  # 载荷的配置
+        jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER  # 生成token的配置
 
         payload = jwt_payload_handler(user)
         token = jwt_encode_handler(payload)
@@ -95,9 +95,11 @@ class CreateUserSerializer(serializers.ModelSerializer):
 
         }
 
+
 class CheckSMSCodeSerializer(serializers.Serializer):
     """校验短信验证码和账号名的序列化器"""
     sms_code = serializers.CharField(label='短信验证码', min_length=6, max_length=6)
+
     def validate(self, attrs):
         sms_code = attrs['sms_code']
         # 根据用户名获取用户模型对象
@@ -139,7 +141,6 @@ class ResetPasswordSerializer(serializers.ModelSerializer):
 
         return attrs
 
-
     def update(self, instance, validated_data):
         """
         更新密码
@@ -152,19 +153,18 @@ class ResetPasswordSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-
     # 更新
     class Meta:
         model = User
         fields = ('id', 'password', 'password2', 'access_token')
         extra_kwargs = {
-            'password':{
-                'write_only':True,
-                'min_length':8,
-                'max_length':20,
-                'error_messages':{
-                    'min_length':'仅允许8-20个字符的密码',
-                    'max_length':'仅允许8-20个字符的密码',
+            'password': {
+                'write_only': True,
+                'min_length': 8,
+                'max_length': 20,
+                'error_messages': {
+                    'min_length': '仅允许8-20个字符的密码',
+                    'max_length': '仅允许8-20个字符的密码',
                 }
 
             }
@@ -173,6 +173,7 @@ class ResetPasswordSerializer(serializers.ModelSerializer):
 
 class UserDetailSerializer(serializers.ModelSerializer):
     """用户详细信息序列化器"""
+
     class Meta:
         model = User
         # email_active 记录邮箱的验证状态
@@ -198,20 +199,46 @@ class EmailSerializer(serializers.ModelSerializer):
         # send_mail(subject,"",settings.EMAIL_HOST_USER,to_email,html_message=html_message)
 
         # 调用celery通过异步发送激活邮件
-        send_verify_email.delay([instance.email],verify_url)
-
-
+        send_verify_email.delay([instance.email], verify_url)
 
         return instance
 
     class Meta:
         model = User
-        fields = ('id','email')
+        fields = ('id', 'email')
         extra_kwargs = {
-            'email':{
-                'required':True
+            'email': {
+                'required': True
             }
         }
 
 
+class UserAddressSerializer(serializers.ModelSerializer):
+    """用户地址序列化器"""
+    province = serializers.StringRelatedField(read_only=True)
+    city = serializers.StringRelatedField(read_only=True)
+    district = serializers.StringRelatedField(read_only=True)
+    province_id = serializers.IntegerField(label='省ID', required=True)
+    city_id = serializers.IntegerField(label='市ID', required=True)
+    district_id = serializers.IntegerField(label='区ID', required=True)
+    mobile = serializers.RegexField(label='手机号', regex=r'1[3-9]\d{9}$')
 
+    class Meta:
+        model = Address
+        # fields =
+        exclude = ('user', 'is_deleted', 'create_time', 'update_time')
+
+    def create(self, validated_data):
+        """保存"""
+        # Address模型类中有user属性，将user对象添加到模型类的创建参数中
+        validated_data['user'] = self.context['request'].user
+        return super().create(validated_data)
+
+
+class AddressTitleSerializer(serializers.ModelSerializer):
+    """地址标题"""
+
+
+    class Meta:
+        model = Address
+        fields = ('title',)

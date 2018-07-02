@@ -62,6 +62,7 @@ var vm = new Vue({
                             sessionStorage.token = response.data.token;
                             sessionStorage.user_id = response.data.user_id;
                             sessionStorage.username = response.data.username;
+                            // console.log(response.data);
                         }
 
                         // 跳转页面[当地址栏上面出现<next=地址>这样的路径时，登陆成功以后要跳转到指定的地址中]

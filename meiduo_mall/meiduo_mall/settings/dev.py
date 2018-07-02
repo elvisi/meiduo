@@ -55,6 +55,8 @@ INSTALLED_APPS = [
     'corsheaders',
     # 注册users模块
     'oauth.apps.OauthConfig',
+    # 行政区划
+    'area.apps.AreaConfig',
 ]
 
 MIDDLEWARE = [
@@ -273,3 +275,12 @@ EMAIL_HOST_USER = '15914397060@163.com'
 EMAIL_HOST_PASSWORD = 'python123'
 #收件人看到的发件人
 EMAIL_FROM = 'python10美多商城<15914397060@163.com>'
+
+
+# DRF扩展 配置缓存
+REST_FRAMEWORK_EXTENSIONS = {
+    # 缓存时间 单位秒
+    'DEFAULT_CACHE_RESPONSE_TIMEOUT': 60 * 60 *24,
+    # 缓存存储（选择对应的Redis缓存项）
+    'DEFAULT_USE_CACHE': 'default',
+}

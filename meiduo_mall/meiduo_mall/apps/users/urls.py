@@ -1,4 +1,6 @@
 from django.conf.urls import url
+from rest_framework.routers import DefaultRouter
+
 from . import views
 from rest_framework_jwt.views import obtain_jwt_token
 
@@ -19,3 +21,8 @@ urlpatterns = [
 
 
 ]
+
+
+router = DefaultRouter()
+router.register('addresses', views.AddressViewSet, base_name='addresses')
+urlpatterns += router.urls
