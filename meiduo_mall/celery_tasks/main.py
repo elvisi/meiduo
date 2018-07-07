@@ -13,7 +13,7 @@ app = Celery('meiduo')
 app.config_from_object('celery_tasks.config')
 
 # 注册异步任务到Celery   # 自动会查找到任务包里面的tasks模块
-app.autodiscover_tasks(['celery_tasks.sms', 'celery_tasks.email'])
+app.autodiscover_tasks(['celery_tasks.sms', 'celery_tasks.email','celery_tasks.html'])
 
 # 最终在终端里面运行Celery
 # celery -A 主程序的包路径 worker -l info
